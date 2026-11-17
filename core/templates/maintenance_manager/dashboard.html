@@ -1,0 +1,35 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Maintenance manager dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Maintenance manager dashboard</h2>
+
+<div class="row mb-4">
+  <div class="col-md-3"><div class="card text-bg-danger mb-3"><div class="card-body">
+    <h6>New breakdowns</h6><h2>{{ reported_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-secondary mb-3"><div class="card-body">
+    <h6>Pending interventions</h6><h2>{{ pending_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-warning mb-3"><div class="card-body">
+    <h6>In progress</h6><h2>{{ in_progress_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-success mb-3"><div class="card-body">
+    <h6>Completed</h6><h2>{{ completed_count }}</h2></div></div></div>
+</div>
+
+<h4>Breakdowns waiting for an intervention</h4>
+<table class="table table-striped">
+  <thead><tr><th>Machine</th><th>Date</th><th>Priority</th><th>Action</th></tr></thead>
+  <tbody>
+    {% for breakdown in new_breakdowns %}
+    <tr>
+      <td>{{ breakdown.machine.name }}</td>
+      <td>{{ breakdown.breakdown_date }}</td>
+      <td><span class="badge bg-{{ breakdown.priority_badge }}">{{ breakdown.get_priority_display }}</span></td>
+      <td><a href="{% url 'intervention_add' %}?breakdown={{ breakdown.pk }}" class="btn btn-sm btn-primary">Create intervention</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-center">No new breakdown.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

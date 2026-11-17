@@ -1,0 +1,33 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Interventions{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Maintenance interventions</h2>
+  <a href="{% url 'intervention_add' %}" class="btn btn-primary">+ New intervention</a>
+</div>
+
+<table class="table table-striped">
+  <thead><tr><th>#</th><th>Machine</th><th>Breakdown type</th><th>Breakdown</th><th>Technician</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    {% for intervention in interventions %}
+    <tr>
+      <td>{{ intervention.id }}</td>
+      <td>{{ intervention.breakdown.machine.name }}</td>
+      <td>{{ intervention.breakdown.get_category_display }}</td>
+      <td>#{{ intervention.breakdown.id }}</td>
+      <td>{% if intervention.technician %}{{ intervention.technician.get_full_name|default:intervention.technician.username }}{% else %}—{% endif %}</td>
+      <td>{{ intervention.intervention_date }}</td>
+      <td><span class="badge bg-{{ intervention.badge_class }}">{{ intervention.get_status_display }}</span></td>
+      <td>
+        <a href="{% url 'intervention_edit' intervention.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{% url 'intervention_delete' intervention.pk %}" class="btn btn-sm btn-danger">Delete</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8" class="text-center">No intervention yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

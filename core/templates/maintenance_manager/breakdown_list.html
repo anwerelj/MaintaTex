@@ -1,0 +1,32 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Breakdowns{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Reported breakdowns</h2>
+
+<table class="table table-striped">
+  <thead><tr><th>#</th><th>Machine</th><th>Type</th><th>Description</th><th>Date</th><th>Priority</th><th>Status</th><th>Reported by</th><th>Action</th></tr></thead>
+  <tbody>
+    {% for breakdown in breakdowns %}
+    <tr>
+      <td>{{ breakdown.id }}</td>
+      <td>{{ breakdown.machine.name }}</td>
+      <td>{{ breakdown.get_category_display }}</td>
+      <td>{{ breakdown.description|truncatechars:50 }}</td>
+      <td>{{ breakdown.breakdown_date }}</td>
+      <td><span class="badge bg-{{ breakdown.priority_badge }}">{{ breakdown.get_priority_display }}</span></td>
+      <td><span class="badge bg-{{ breakdown.badge_class }}">{{ breakdown.get_status_display }}</span></td>
+      <td>{{ breakdown.reported_by.username|default:"-" }}</td>
+      <td>
+        {% if breakdown.status != 'resolved' %}
+        <a href="{% url 'intervention_add' %}?breakdown={{ breakdown.pk }}" class="btn btn-sm btn-primary">Create intervention</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="9" class="text-center">No breakdown yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

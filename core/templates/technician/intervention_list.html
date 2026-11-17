@@ -1,0 +1,29 @@
+{% extends 'common/base.html' %}
+
+{% block title %}My interventions{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Interventions assigned to me</h2>
+
+<table class="table table-striped">
+  <thead><tr><th>#</th><th>Machine</th><th>Breakdown type</th><th>Breakdown</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    {% for intervention in interventions %}
+    <tr>
+      <td>{{ intervention.id }}</td>
+      <td>{{ intervention.breakdown.machine.name }}</td>
+      <td>{{ intervention.breakdown.get_category_display }}</td>
+      <td>#{{ intervention.breakdown.id }}</td>
+      <td>{{ intervention.intervention_date }}</td>
+      <td><span class="badge bg-{{ intervention.badge_class }}">{{ intervention.get_status_display }}</span></td>
+      <td>
+        <a href="{% url 'intervention_detail' intervention.pk %}" class="btn btn-sm btn-primary">Details</a>
+        <a href="{% url 'intervention_update' intervention.pk %}" class="btn btn-sm btn-warning">Update</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="text-center">No intervention assigned to you.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

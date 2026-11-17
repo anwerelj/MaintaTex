@@ -1,0 +1,55 @@
+{% extends 'common/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4">
+  <a href="{% url cancel_url %}" class="btn back-button btn-sm" aria-label="Back to previous list">
+    <span aria-hidden="true">&larr;</span> Back
+  </a>
+  <h2 class="mb-0">{{ title }}</h2>
+</div>
+
+<div class="card form-card">
+  <div class="card-body">
+    <form method="post"{% if form.password_confirm %} data-password-confirmation{% endif %}>
+      {% csrf_token %}
+
+      {% for field in form %}
+      <div class="mb-3">
+        {% if field.name == 'breakdown' and form.no_open_breakdowns %}
+          <div class="alert alert-info" role="status">
+            No open breakdowns are available to select.
+          </div>
+        {% endif %}
+        {% if field.name == 'technician' and form.no_active_technicians %}
+          <div class="alert alert-info" role="status">
+            No active technicians are available to assign. Ask the administrator to
+            create or approve a technician account.
+          </div>
+        {% endif %}
+        {% if field.name == 'is_active' %}
+          <div class="form-check">
+            {{ field }}
+            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          </div>
+        {% else %}
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        {% endif %}
+        {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+
+      {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

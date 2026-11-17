@@ -1,0 +1,34 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Users</h2>
+  <a href="{% url 'user_add' %}" class="btn btn-primary">+ Add a user</a>
+</div>
+
+<table class="table table-striped">
+  <thead><tr><th>Username</th><th>Full name</th><th>Email</th><th>Phone</th><th>Role</th><th>Active</th><th>Actions</th></tr></thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.username }}</td>
+      <td>{{ u.get_full_name }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.profile.phone_number|default:"—" }}</td>
+      <td>{% if u.is_superuser %}Administrator{% elif u.profile and u.profile.role %}{{ u.profile.get_role_display }}{% else %}<span class="text-danger">No role</span>{% endif %}</td>
+      <td>{% if u.is_active %}Yes{% else %}No{% endif %}</td>
+      <td>
+        <a href="{% url 'user_edit' u.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        <form method="post" action="{% url 'user_delete' u.pk %}" class="d-inline"
+              data-confirm="Delete this account? This action cannot be undone.">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

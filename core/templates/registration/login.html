@@ -1,0 +1,36 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Login - MaintaTex{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h3 class="text-center mb-4">MaintaTex</h3>
+        <h5 class="text-center text-muted mb-4">Welcome back</h5>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">Incorrect username or password.</div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.username.id_for_label }}">Email or username</label>
+            {{ form.username }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <p class="text-center mt-3 mb-0">
+          Need an account? <a href="{% url 'signup' %}">Sign up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

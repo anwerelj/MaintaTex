@@ -1,0 +1,37 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Production manager dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Production manager dashboard</h2>
+
+<div class="row mb-4">
+  <div class="col-md-3"><div class="card text-bg-success mb-3"><div class="card-body">
+    <h6>Operational machines</h6><h2>{{ operational_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-danger mb-3"><div class="card-body">
+    <h6>Broken machines</h6><h2>{{ broken_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-warning mb-3"><div class="card-body">
+    <h6>Under maintenance</h6><h2>{{ maintenance_count }}</h2></div></div></div>
+  <div class="col-md-3"><div class="card text-bg-primary mb-3"><div class="card-body">
+    <h6>My breakdowns</h6><h2>{{ my_breakdowns_count }}</h2></div></div></div>
+</div>
+
+<h4>My latest breakdowns</h4>
+<table class="table table-striped">
+  <thead><tr><th>Machine</th><th>Type</th><th>Date</th><th>Priority</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for breakdown in recent_breakdowns %}
+    <tr>
+      <td>{{ breakdown.machine.name }}</td>
+      <td>{{ breakdown.get_category_display }}</td>
+      <td>{{ breakdown.breakdown_date }}</td>
+      <td><span class="badge bg-{{ breakdown.priority_badge }}">{{ breakdown.get_priority_display }}</span></td>
+      <td><span class="badge bg-{{ breakdown.badge_class }}">{{ breakdown.get_status_display }}</span></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-center">You have not reported any breakdown yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'breakdown_add' %}" class="btn btn-primary">Report a breakdown</a>
+{% endblock %}

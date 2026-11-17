@@ -1,0 +1,43 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Intervention #{{ intervention.id }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Intervention #{{ intervention.id }}</h2>
+
+<div class="card mb-3 detail-card">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Machine</dt>
+      <dd class="col-sm-8">{{ intervention.breakdown.machine }}</dd>
+
+      <dt class="col-sm-4">Machine location</dt>
+      <dd class="col-sm-8">{{ intervention.breakdown.machine.location }}</dd>
+
+      <dt class="col-sm-4">Breakdown description</dt>
+      <dd class="col-sm-8">{{ intervention.breakdown.description }}</dd>
+
+      <dt class="col-sm-4">Breakdown type</dt>
+      <dd class="col-sm-8">{{ intervention.breakdown.get_category_display }}</dd>
+
+      <dt class="col-sm-4">Breakdown priority</dt>
+      <dd class="col-sm-8"><span class="badge bg-{{ intervention.breakdown.priority_badge }}">{{ intervention.breakdown.get_priority_display }}</span></dd>
+
+      <dt class="col-sm-4">Intervention date</dt>
+      <dd class="col-sm-8">{{ intervention.intervention_date }}</dd>
+
+      <dt class="col-sm-4">Status</dt>
+      <dd class="col-sm-8"><span class="badge bg-{{ intervention.badge_class }}">{{ intervention.get_status_display }}</span></dd>
+
+      <dt class="col-sm-4">Diagnosis</dt>
+      <dd class="col-sm-8">{{ intervention.diagnosis|default:"-"|linebreaksbr }}</dd>
+
+      <dt class="col-sm-4">Repair description</dt>
+      <dd class="col-sm-8">{{ intervention.repair_description|default:"-"|linebreaksbr }}</dd>
+    </dl>
+  </div>
+</div>
+
+<a href="{% url 'intervention_update' intervention.pk %}" class="btn btn-warning">Update status / diagnosis / repair</a>
+<a href="{% url 'intervention_list' %}" class="btn back-button">&larr; Back to the list</a>
+{% endblock %}
